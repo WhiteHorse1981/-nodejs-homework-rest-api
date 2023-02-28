@@ -7,6 +7,10 @@ const contactSchema = joi.object({
   favorite: joi.boolean(),
 });
 
-const contactValidator = contactSchema;
+const validator = schema => body => {
+  return schema.validate(body);
+};
+
+const contactValidator = validator(contactSchema);
 
 module.exports = { contactValidator };
