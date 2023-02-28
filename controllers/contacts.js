@@ -86,7 +86,7 @@ const removeContact = async (req, res, next) => {
       res.status(200).json({ message: 'Contact deleted' });
     }
   } catch (error) {
-    console.log(`Error: ${error.message}`.red);
+    console.log(`Error: ${error.message}`);
     next(error);
   }
 };
