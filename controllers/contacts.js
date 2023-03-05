@@ -1,15 +1,19 @@
-const service = require('../service');
+const service = require('../service/contacts');
 const { contactValidator } = require('../utils/validator');
 
 const getAll = async (req, res) => {
   const contacts = await service.getAllContacts();
-  console.log('contacts: ', contacts);
+
+  // console.log('contacts: ', contacts);
   res.status(200).json(contacts);
 };
 
 const getById = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await service.getContactById(contactId);
+  const { _id: owner } = req.user;
+
+  const contact = await service.getContactById(contactId, owner);
+  console.log('contact: ', contact);
   if (contact) {
     res.status(200).json(contact);
   } else {
@@ -19,6 +23,9 @@ const getById = async (req, res) => {
 
 const addContact = async (req, res, next) => {
   let { name, email, phone, favorite } = req.body;
+
+  // const { _id: owner } = req.user;
+
   if (!favorite) {
     favorite = false;
   }

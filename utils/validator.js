@@ -1,5 +1,7 @@
 const joi = require('joi');
 
+const emailRegexp = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+
 const contactSchema = joi.object({
   name: joi.string().min(3),
   email: joi.string().email(),
@@ -13,4 +15,19 @@ const validator = schema => body => {
 
 const contactValidator = validator(contactSchema);
 
-module.exports = { contactValidator };
+const registerSchema = joi.object({
+  name: joi.string().required(),
+  email: joi.string().pattern(emailRegexp).required(),
+  password: joi.string().required(),
+});
+
+const registerValidator = validator(registerSchema);
+
+const loginSchema = joi.object({
+  email: joi.string().pattern(emailRegexp).required(),
+  password: joi.string().required(),
+});
+
+const loginValidator = validator(loginSchema);
+
+module.exports = { contactValidator, registerValidator, loginValidator };
