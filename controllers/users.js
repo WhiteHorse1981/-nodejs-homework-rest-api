@@ -40,6 +40,7 @@ const login = async (req, res) => {
     id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
+  console.log(token);
   await User.findByIdAndUpdate(user._id, { token });
   res.json({
     token,
@@ -47,17 +48,27 @@ const login = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { name, email } = req.user;
+  const { email } = req.user;
+
+  const user = await service.getUser({ email });
+  if (!user) {
+    throw RequestError(401);
+  }
 
   res.json({
-    name,
-    email,
+    email: user.email,
+    subscription: user.subscription,
   });
 };
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  await service.getUserLogout(_id, { token: '' });
+
+  const user = await service.getUser(_id);
+  if (!user) {
+    throw RequestError(401);
+  }
+  await User.findByIdAndUpdate(_id, { token: '' });
 
   res.json({
     message: 'Logout success',

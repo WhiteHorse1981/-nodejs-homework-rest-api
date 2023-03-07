@@ -15,6 +15,22 @@ const validator = schema => body => {
 
 const contactValidator = validator(contactSchema);
 
+const contactUpdateSchema = joi
+  .object({
+    name: joi.string().min(3),
+    email: joi.string().email(),
+    phone: joi.string().min(5),
+  })
+  .min(1);
+
+const contactUpdateValidatar = validator(contactUpdateSchema);
+
+const updateFavoriteSchema = joi.object({
+  favorite: joi.boolean().required(),
+});
+
+const updateFavoriteValidator = validator(updateFavoriteSchema);
+
 const registerSchema = joi.object({
   name: joi.string().required(),
   email: joi.string().pattern(emailRegexp).required(),
@@ -30,4 +46,10 @@ const loginSchema = joi.object({
 
 const loginValidator = validator(loginSchema);
 
-module.exports = { contactValidator, registerValidator, loginValidator };
+module.exports = {
+  contactValidator,
+  registerValidator,
+  loginValidator,
+  contactUpdateValidatar,
+  updateFavoriteValidator,
+};

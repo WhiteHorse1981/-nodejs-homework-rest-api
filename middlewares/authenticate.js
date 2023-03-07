@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const { RequestError } = require('../helpers');
 
-const { User } = require('../service/schemas/users');
+const User = require('../service/schemas/users');
 
 const { SECRET_KEY } = process.env;
 
@@ -13,12 +14,16 @@ const authenticate = async (req, res, next) => {
     if (bearer !== 'Bearer') {
       throw RequestError(401);
     }
+
     const { id } = jwt.verify(token, SECRET_KEY);
+
     const user = await User.findById(id);
+
     if (!user || !user.token || user.token !== token) {
       throw RequestError(401);
     }
     req.user = user;
+
     next();
   } catch (error) {
     if (!error.status) {
