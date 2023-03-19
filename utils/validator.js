@@ -46,10 +46,17 @@ const loginSchema = joi.object({
 
 const loginValidator = validator(loginSchema);
 
+const verifyEmailSchema = joi.object({
+  email: joi.string().pattern(emailRegexp).required(),
+});
+
+const verifyEmailValidator = validator(verifyEmailSchema);
+
 module.exports = {
   contactValidator,
   registerValidator,
   loginValidator,
   contactUpdateValidatar,
   updateFavoriteValidator,
+  verifyEmailValidator,
 };
